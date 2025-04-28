@@ -1,0 +1,138 @@
+create database labb;
+use labb;
+
+
+
+create table direccion(
+idDireccion int primary key,
+Direccion varchar(45),
+Ciudad varchar(45),
+Pais varchar(45)
+);
+
+INSERT INTO direccion(idDireccion,Direccion,Ciudad,Pais) 
+VALUES
+(1,'3ra calle y 5ta avenida','Guatemala', 'Guatemala'),
+(2, '2da calle y 15va avenida', 'Mixco', 'Guatemala'),
+(3,'5ta calle y 7ma avenida', 'Villanueva','Guatemala'),
+(4,'8va calle y 9na avenida','Guatemala','Guatemala'),
+(5,'1ra calle y 10ma avenida', 'Mixco', 'Guatemala');
+SELECT * FROM labb.direccion;
+
+create table categoria(
+idCategoria int primary key,
+Nombre varchar(45)
+);
+
+INSERT INTO categoria VALUES
+(1, 'Drama'),
+(2, 'Suspenso'),
+(3, 'Comedia'),
+(4, 'Miedo'),
+(5, 'Documental');
+SELECT * FROM categoria ORDER BY Nombre ASC;
+Select * from labb.categoria;
+
+create table cliente(
+idCliente int primary key,
+Nombre varchar(45),
+Apellido varchar(45),
+Edad int, 
+Direccion_idDireccion int,
+foreign key (Direccion_idDireccion) references Direccion(idDireccion)
+);
+SELECT * FROM cliente WHERE Nombre = 'Juliana';
+Select * from labb.cliente;
+
+INSERT INTO cliente VALUES
+(1,"Diego","Zamudio","17",1),
+(2,"Andre","Rodriguez","22",2),
+(3,"Juliana","Alvarez","30",3),
+(4,"Luis","Perez","19",4),
+(5,"Alfredo","Enriquez","24",5);
+
+create table peliculas(
+idPeliculas int primary key,
+Nombre varchar(45),
+Direccion int,
+Descripcion TEXT,
+Año int,
+Categoria_idCategoria int,
+foreign key (Categoria_idCategoria) references Categoria(idCategoria)
+);
+
+INSERT INTO peliculas (idPeliculas,Nombre,Direccion,Año,Categoria_idCategoria) VALUES
+(1, 'Harry Potter', 90, 'Magia', 2002, 5),
+(2, 'IronMan', 140, 'Superhéroe', 2008, 1),
+(3, 'Avengers', 195, 'Superhéroes', 2000, 2),
+(4, 'POKEMON1', 100, 'Pokemones', 2005, 5),
+(5, 'ToyStory', 170, 'Animada sobre juguetes', 2015, 4);
+Select * from labb.peliculas;
+DELETE FROM peliculas WHERE Nombre = 'POKEMON1';
+SELECT * FROM peliculas ORDER BY Año DESC;
+
+
+create table renta(
+idRenta int primary key,
+Fecha_Renta DATE,
+Fecha_Entrega DATE,
+Inventario_idCopiasPeliculas int,
+foreign key (Inventario_idCopiasPeliculas) references Inventario(idCopiasPeliculas),
+Cliente_idCliente int,
+foreign key (Cliente_idCliente) references Cliente(idCliente)
+
+);
+
+INSERT INTO renta VALUES
+(1, '2025-05-10', '2025-08-10', 2, 1),
+(2, '2025-09-01', '2025-013-01', 3, 2),
+(3, '2025-22-05', '2025-25-05', 4, 3),
+(4, '2025-30-12', '2025-02-01', 5, 4),
+(5, '2025-21-11', '2025-25-11', 1, 5);
+
+create table inventario(
+idCopiasPeliculas int primary key,
+Peliculas_idPeliculas int,
+foreign key (Peliculas_idPeliculas ) references Peliculas(idPeliculas),
+Disponible tinyint
+
+
+);
+
+INSERT INTO inventario VALUES
+(1, 1, 1),
+(2, 2, 1),
+(3, 3, 0),
+(4, 4, 1),
+(5, 5, 1);
+
+
+SELECT SUM(cliente.Edad) AS TotalEdad
+FROM renta
+JOIN cliente ON renta.Cliente_idCliente = cliente.idCliente;
+
+create table series (
+idSeries int primary key,
+Nombre varchar (50),
+Numdetemporadas int,
+tema varchar (50)
+);
+insert into series (idSeries, Nombre, Numdetemporadas, tema)
+Values
+(1, "Juego del calamar", 2,"Juegos en los que si pierdes mueres"),
+(2, "The last of us", 2,"Adaptación de videojuego que trata de zombies"),
+(3, "o11ce", 3,"Es una serie sobre futbol");
+select * from labb.series;
+
+create table comida(
+idComida int primary key,
+Tipo varchar (50),
+Precio int,
+Cantidadeninventario varchar (50)
+);
+insert into comida (idComida,Tipo,Precio,Cantidadeninventario)
+Values
+(1, "Chatarra", 55.00, "Cincuenta unidades en inventario"),
+(2, "Chatarra", 69.50, "Veinticinco unidades en inventario"),
+(3, "Chatarra", 20.00, "Cien unidades en inventario");
+select * from labb.comida;
